@@ -46,11 +46,6 @@ class CrawlerTest extends TestCase
         $this->private = true;
         $this->resale = true;
 
-        $crawler = Goutte::request('GET', 'https://seminovos.com.br');
-        $filter = $crawler->filter('.section-features');
-
-        // dd($filter);
-
         $params = array(
 			'vehicleType' 			=> $this->vehicleType,
             'isNew' 				=> $this->isNew,

@@ -79,8 +79,6 @@ class CarInformationController extends Controller
 
         $url = self::URL.$url; 
 
-        // $url = sprintf('$s/'.$url, self::URL);
-
         return $url;
     }
     

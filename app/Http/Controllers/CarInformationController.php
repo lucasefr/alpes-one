@@ -3,21 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Goutte;
+use App\Http\Requests\CarInformationFormRequest;
+use Goutte, CarInformationLib;
 
 class CarInformationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-        return view('welcome');
-    }
 
+    const URL = "https://seminovos.com.br";
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -27,45 +20,68 @@ class CarInformationController extends Controller
     public function getInformation(Request $request)
     {
         //
-        $crawler = Goutte::request('GET', 'https://seminovos.com.br');
-        $filter = $crawler->filter('.section-features')->each(function ($node) {
-        dump($node->text());
+        $response = $this->getCarInformation($request);
+        
+        return $response;
+    }
+
+    public function getCarInformation($request)
+    {
+        $url = $this->makeUrl($request);
+        $crawler = Goutte::request('GET', $url);
+        
+        $list = $crawler->filter('.list-of-cards')->children();
+        $filter = $crawler->filter('.list-of-cards')->children()->each(function ($node, $i) {
+            return ($node->extract('_text')) ;
         });
-
-        return view('welcome');
+        $result = json_encode($filter);
+        
+        return $result;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function makeUrl($request)
     {
-        //
-    }
+        $url = "";
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        if ($request->vehicleType) {
+            $url .= '/'.$request->vehicleType;
+        }
+        if ($request->branch) {
+            $url .= '/'.$request->branch;
+        }
+        if ($request->model) {
+            $url .= '/'.$request->model;
+        }
+        if ($request->inicialYear) {
+            $url .= '/ano-'.$request->inicialYear;
+        }
+        if ($request->finalYear) {
+            $url .= '-'.$request->finalYear;
+        }
+        if ($request->initialPrice) {
+            $url .= '/preco-'.$request->initialPrice;
+        }
+        if ($request->finalPrice) {
+            $url .= '-'.$request->finalPrice;
+        }
+        if ($request->private) {
+            $url .= '/particular-origem';
+        }
+        if ($request->resale) {
+            $url .= '/revenda-origem';
+        }
+        if ($request->isNew) {
+            $url .= '/novo-estado';
+        }
+        if ($request->isSemiNew) {
+            $url .= '/seminovo-estado';
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $url = self::URL.$url; 
+
+        // $url = sprintf('$s/'.$url, self::URL);
+
+        return $url;
     }
+    
 }

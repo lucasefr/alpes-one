@@ -14,7 +14,7 @@ class CrawlerTest extends TestCase
      *
      * @return void
      */
-    private $vehicle_type;
+    private $vehicleType;
     private $isNew;
     private $isSemiNew;
     private $branch;
@@ -34,40 +34,38 @@ class CrawlerTest extends TestCase
 
     public function testCrawler(){
 
-        $this->vehicleType = '';
-        $this->isNew = '';
-        $this->isSemiNew = '';
-        $this->branch = '';
-        $this->model = '';
-        $this->city = '';
-        $this->initialPrice = '';
-        $this->finalPrice = '';
-        $this->inicialYear = '';
-        $this->finalYear = '';
-        $this->private = '';
-        $this->resale = '';
+        $this->vehicleType = 'carro';
+        $this->isNew = true;
+        $this->isSemiNew = true;
+        $this->branch = 'volkswagen';
+        $this->model = 'gol';
+        $this->initialPrice = '2000';
+        $this->finalPrice = '90000';
+        $this->inicialYear = '2001';
+        $this->finalYear = '2020';
+        $this->private = true;
+        $this->resale = true;
 
         $crawler = Goutte::request('GET', 'https://seminovos.com.br');
         $filter = $crawler->filter('.section-features');
 
-        dd($filter);
+        // dd($filter);
 
         $params = array(
-			'vehicle_type' 			=> $this->vehicleType,
-            'is_new' 				=> $this->isNew,
-            'is_seminew' 			=> $this->isSemiNew,
+			'vehicleType' 			=> $this->vehicleType,
+            'isNew' 				=> $this->isNew,
+            'isSemiNew' 			=> $this->isSemiNew,
             'branch' 				=> $this->branch,
             'model' 				=> $this->model,
-            'city' 				    => $this->city,
-            'initial_price' 		=> $this->initialPrice,
-            'final_price' 			=> $this->finalPrice,
-            'inicial_year' 			=> $this->inicialYear,
-            'final_year' 			=> $this->finalYear,
+            'initialPrice' 		    => $this->initialPrice,
+            'finalPrice' 			=> $this->finalPrice,
+            'inicialYear' 			=> $this->inicialYear,
+            'finalYear' 			=> $this->finalYear,
             'private' 				=> $this->private,
             'resale' 				=> $this->resale,
         );
 
-        $response = $this->call('GET', '/api/get_user_status', $params);
+        $response = $this->call('GET', '/api/filter', $params);
 		$apiResult  = json_decode($response->getContent());
 
 		$this->assertEquals($apiResult->success, true);

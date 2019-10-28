@@ -23,6 +23,7 @@ class CarInformationFormRequest extends FormRequest
      */
     public function rules()
     {
+        $x = "";
         return [
             //
             'vehicle_type' 			=> 'max:50',
@@ -36,7 +37,7 @@ class CarInformationFormRequest extends FormRequest
             'inicial_year' 			=> 'max:4',
             'final_year' 			=> 'max:4',
             'private' 				=> 'boolean',
-            'resale' 				=> 'bollean',
+            'resale' 				=> 'boolean',
         ];
     }
 
